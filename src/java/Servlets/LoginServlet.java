@@ -18,8 +18,8 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        //request.getSession();
-//        HttpSession session = request.getSession();
+//        request.getSession();
+        HttpSession session = request.getSession();
 /////////////////////////////// this part isnt working
 //        String logout = request.getParameter("logout");
 //        String message = "";
@@ -29,6 +29,15 @@ public class LoginServlet extends HttpServlet {
         //////////////////////////////////
         //create an boolean and an if to verify if someone has been logged out if exists
         // then invalidate the session and display the message user has been logged out
+//        String logout =  request.getAttribute("logout");
+        String logout = (String) session.getAttribute("logout");
+       
+        if (logout != null) {
+            session.invalidate();
+            String message = "You have successfully logged out";
+            request.setAttribute("message", message);
+        }
+
         getServletContext()
                 .getRequestDispatcher("/WEB-INF/login.jsp")
                 .forward(request, response);
@@ -57,22 +66,18 @@ public class LoginServlet extends HttpServlet {
             validUser = user.login(username, password);
         }
 
-        if (validUser) { 
+        if (validUser) {
             session.setAttribute("username", username);
-//            getServletContext()
-//                    .getRequestDispatcher("/WEB-INF/home.jsp")
-//                    .forward(request, response);
-//                response.sendRedirect("/WEB-INF/home.jsp");
             response.sendRedirect("home");
-            System.out.println("");
             return;
 
-//"/WEB-INF/home.jsp"
         } else if (!validUser && !(username.equals("")) || !(password.equals(""))) {
             message = "Invalid Login";
 
         }
         request.setAttribute("message", message);
+        request.setAttribute("username", username);
+        request.setAttribute("password", password);
         getServletContext()
                 .getRequestDispatcher("/WEB-INF/login.jsp")
                 .forward(request, response);
