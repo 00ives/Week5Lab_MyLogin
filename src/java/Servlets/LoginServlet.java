@@ -18,18 +18,30 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-//        request.getSession();
         HttpSession session = request.getSession();
 /////////////////////////////// this part isnt working
-//        String logout = request.getParameter("logout");
-//        String message = "";
-//        if (logout != null && logout.equals("reset")){
-//            request.setAttribute("message", message);
-//        }
-        //////////////////////////////////
-        //create an boolean and an if to verify if someone has been logged out if exists
-        // then invalidate the session and display the message user has been logged out
+        String logout = request.getParameter("logout");
+        String message = "";
+        String loggedIn = (String) session.getAttribute("loggedIn");
+//        if (logout != null && logout.equals("logout")){
+
+        if (logout != null){
+            loggedIn = null;
+            message = "You have successfully logged out";
+            request.setAttribute("message", message);
+            session.invalidate();
+        }
+        if (loggedIn != null){
+            response.sendRedirect("home");
+            return;
+        }
+//////////////////////////////////
+        
+
+
+/****************************************to make this section work don't forget to go to home.jsp and swap out the commented wals
 //        String logout =  request.getAttribute("logout");
+
         String logout = (String) session.getAttribute("logout");
        
         if (logout != null) {
@@ -37,7 +49,7 @@ public class LoginServlet extends HttpServlet {
             String message = "You have successfully logged out";
             request.setAttribute("message", message);
         }
-
+****************************************/
         getServletContext()
                 .getRequestDispatcher("/WEB-INF/login.jsp")
                 .forward(request, response);
@@ -68,6 +80,8 @@ public class LoginServlet extends HttpServlet {
 
         if (validUser) {
             session.setAttribute("username", username);
+            String loggedIn = "loggedIn";
+            session.setAttribute("loggedIn" , loggedIn);
             response.sendRedirect("home");
             return;
 

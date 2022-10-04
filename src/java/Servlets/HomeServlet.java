@@ -1,4 +1,3 @@
-
 package Servlets;
 
 import java.io.IOException;
@@ -19,29 +18,30 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
+
         HttpSession session = request.getSession();
-        
+        String loggedIn = (String) session.getAttribute("loggedIn");
+
+        if (loggedIn == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
         String username = (String) session.getAttribute("username");
         request.setAttribute("username", username);
         String logout = "logout";
         session.setAttribute("logout", logout);
-       
-        
+
         getServletContext()
                 .getRequestDispatcher("/WEB-INF/home.jsp")
                 .forward(request, response);
-       
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-          
-        
-   
-    }
 
-    
+    }
 
 }
