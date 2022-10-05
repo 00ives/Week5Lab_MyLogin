@@ -27,8 +27,6 @@ public class HomeServlet extends HttpServlet {
             return;
         }
 
-        String username = (String) session.getAttribute("username");
-        request.setAttribute("username", username);
         String logout = "logout";
         session.setAttribute("logout", logout);
 
